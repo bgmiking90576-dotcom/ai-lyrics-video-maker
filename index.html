@@ -1,1 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>AI Lyrics Video Maker</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top, #241052, #090712 45%, #050509);
+    color: white;
+    min-height: 100vh;
+}
+
+.container {
+    width: 92%;
+    max-width: 1100px;
+    margin: auto;
+    padding: 35px 0 60px;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: #a855f7;
+}
+
+.hero {
+    text-align: center;
+    padding: 70px 10px 45px;
+}
+
+.hero h1 {
+    font-size: clamp(38px, 8vw, 72px);
+    line-height: 1;
+    margin-bottom: 20px;
+}
+
+.hero h1 span {
+    color: #c084fc;
+}
+
+.hero p {
+    color: #b7b4c5;
+    font-size: 17px;
+    max-width: 650px;
+    margin: auto;
+    line-height: 1.6;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 35px;
+}
+
+.step {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.step h3 {
+    font-size: 15px;
+}
+
+.step p {
+    color: #9995aa;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.editor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+.card {
+    background: rgba(17, 15, 27, .88);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 15px 50px rgba(0,0,0,.25);
+}
+
+.card h2 {
+    margin-bottom: 18px;
+}
+
+.upload {
+    border: 2px dashed #7046b8;
+    border-radius: 18px;
+    padding: 35px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.upload:hover {
+    background: rgba(139,92,246,.08);
+}
+
+.upload-icon {
+    font-size: 42px;
+    margin-bottom: 12px;
+}
+
+.upload p {
+    color: #aaa5b8;
+    font-size: 14px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+textarea {
+    width: 100%;
+    height: 170px;
+    resize: vertical;
+    background: #0b0911;
+    border: 1px solid #30293c;
+    border-radius: 15px;
+    color: white;
+    padding: 15px;
+    outline: none;
+    font-size: 14px;
+}
+
+textarea:focus {
+    border-color: #8b5cf6;
+}
+
+.styles {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.style {
+    padding: 12px 5px;
+    border: 1px solid #332b40;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.style.active {
+    border-color: #a855f7;
+    background: rgba(168,85,247,.15);
+}
+
+.generate {
+    width: 100%;
+    margin-top: 22px;
+    padding: 16px;
+    border: 0;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #7c3aed, #c026d3);
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.generate:hover {
+    opacity: .9;
+}
+
+.preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.phone {
+    width: 240px;
+    height: 425px;
+    border-radius: 25px;
+    overflow: hidden;
+    border: 5px solid #24202c;
+    background:
+        radial-gradient(circle at 50% 30%, #7137b8, #090712 55%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lyrics-preview {
+    text-align: center;
+    padding: 20px;
+    font-size: 21px;
+    font-weight: bold;
+    text-shadow: 0 0 18px #c084fc;
+}
+
+.badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 10px;
+    background: rgba(0,0,0,.45);
+    padding: 6px 9px;
+    border-radius: 20px;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 25px;
+}
+
+.feature {
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.feature-icon {
+    font-size: 27px;
+    margin-bottom: 10px;
+}
+
+.feature h3 {
+    font-size: 14px;
+}
+
+.feature p {
+    color: #9995aa;
+    font-size: 12px;
+    margin-top: 7px;
+    line-height: 1.5;
+}
+
+@media(max-width: 750px) {
+    .steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .editor {
+        grid-template-columns: 1fr;
+    }
+
+    .features {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 450px) {
+    .container {
+        width: 94%;
+    }
+
+    .hero {
+        padding-top: 45px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .features {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        🦖 T-REX <span>LYRICS</span>
+    </div>
+
+    <section class="hero">
+        <h1>AI Lyrics <span>Video Maker</span></h1>
+        <p>
+            Turn your songs and lyrics into stylish cinematic lyric videos
+            with animated text, glowing effects and beautiful backgrounds.
+        </p>
+    </section>
+
+    <div class="steps">
+
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>🎵 Upload</h3>
+            <p>Add your song</p>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>📝 Lyrics</h3>
+            <p>Add your lyrics</p>
+        </div>
+
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>✨ Style</h3>
+            <p>Choose your style</p>
+        </div>
+
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>🎬 Generate</h3>
+            <p>Create your video</p>
+        </div>
+
+    </div>
+
+    <div class="editor">
+
+        <div class="card">
+
+            <h2>🎵 Your Project</h2>
+
+            <label class="upload">
+                <input type="file" accept="audio/*">
+                <div class="upload-icon">🎧</div>
+                <strong>Upload your song</strong>
+                <p>MP3, WAV or M4A</p>
+            </label>
+
+            <h2 style="margin-top:25px;">📝 Lyrics</h2>
+
+            <textarea placeholder="Paste your lyrics here..."></textarea>
+
+            <h2 style="margin-top:22px;">🎨 Choose Style</h2>
+
+            <div class="styles">
+
+                <div class="style active">🌌 Anime</div>
+                <div class="style">🎬 Cinematic</div>
+                <div class="style">💙 Sad</div>
+                <div class="style">🖤 Dark</div>
+                <div class="style">🎮 Gaming</div>
+                <div class="style">🌙 Lo-fi</div>
+
+            </div>
+
+            <button class="generate">
+                ✨ GENERATE LYRIC VIDEO
+            </button>
+
+        </div>
+
+        <div class="card preview">
+
+            <div class="phone">
+
+                <div class="badge">9:16 PREVIEW</div>
+
+                <div class="lyrics-preview">
+                    Your lyrics<br>
+                    will appear<br>
+                    <span style="color:#c084fc;">here ✨</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="features">
+
+        <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <h3>Word-by-Word</h3>
+            <p>Animated lyrics timing.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">✨</div>
+            <h3>Glow Effects</h3>
+            <p>Flashy cinematic effects.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">🖼️</div>
+            <h3>Backgrounds</h3>
+            <p>Beautiful video backgrounds.</p>
+        </div>
+
+        <div class="feature">
+            <div class="feature-icon">📱</div>
+            <h3>9:16 Export</h3>
+            <p>Perfect for Reels & Shorts.</p>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+          </html>
