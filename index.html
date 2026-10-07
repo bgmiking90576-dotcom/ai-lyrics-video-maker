@@ -2333,7 +2333,135 @@ applyStyleTheme();
 applyBackgroundMode();
 
             
+/* =========================
+   REAL AUDIO SYNC
+========================= */
 
+let lyricSyncTimer = null;
+let currentWordIndex = -1;
+
+function startLyricSync() {
+    stopLyricSync();
+    lyricSyncTimer = requestAnimationFrame(syncLyricsToAudio);
+}
+
+function stopLyricSync() {
+    if (lyricSyncTimer) {
+        cancelAnimationFrame(lyricSyncTimer);
+        lyricSyncTimer = null;
+    }
+}
+
+function syncLyricsToAudio() {
+
+    if (
+        !audioPlayer ||
+        audioPlayer.paused ||
+        !transcriptData.words ||
+        !transcriptData.words.length
+    ) {
+        stopLyricSync();
+        return;
+    }
+
+    const currentTime = audioPlayer.currentTime;
+    let index = -1;
+
+    for (let i = 0; i < transcriptData.words.length; i++) {
+
+        const word = transcriptData.words[i];
+
+        const start = Number(word.start);
+        const end = Number(word.end);
+
+        if (
+            currentTime >= start &&
+            currentTime <= end
+        ) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index !== currentWordIndex) {
+
+        currentWordIndex = index;
+
+        if (index >= 0) {
+            showCurrentLyricWord(index);
+        }
+    }
+
+    lyricSyncTimer =
+        requestAnimationFrame(syncLyricsToAudio);
+}
+
+function showCurrentLyricWord(index) {
+
+    const words = transcriptData.words;
+
+    if (!words || !words[index]) {
+        return;
+    }
+
+    const startIndex = Math.max(0, index - 5);
+    const endIndex = Math.min(words.length, index + 6);
+
+    const visibleWords =
+        words.slice(startIndex, endIndex);
+
+    lyricsPreview.innerHTML =
+        visibleWords.map((word, i) => {
+
+            const realIndex = startIndex + i;
+
+            const text =
+                escapeHTML(word.word || "");
+
+            if (realIndex === index) {
+                return `
+                    <span class="sync-current-word">
+                        ${text}
+                    </span>
+                `;
+            }
+
+            return `
+                <span>${text}</span>
+            `;
+
+        }).join(" ");
+}
+
+audioPlayer.addEventListener("play", function () {
+
+    currentWordIndex = -1;
+    startLyricSync();
+
+});
+
+audioPlayer.addEventListener("pause", function () {
+
+    stopLyricSync();
+
+});
+
+audioPlayer.addEventListener("ended", function () {
+
+    stopLyricSync();
+    currentWordIndex = -1;
+
+});
+
+audioPlayer.addEventListener("seeked", function () {
+
+    currentWordIndex = -1;
+
+    if (!audioPlayer.paused) {
+        startLyricSync();
+    }
+
+});
 /* =========================
    AI TRANSCRIPTION
 ========================= */
