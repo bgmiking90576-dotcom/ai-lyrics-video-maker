@@ -2147,6 +2147,12 @@ function startLinePreview() {
 
 function startWordPreview() {
 
+    if (
+        transcriptData.words &&
+        transcriptData.words.length
+    ) {
+        return;
+    }
     stopLyricsPreview();
 
     const lines =
