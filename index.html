@@ -1,567 +1,583 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AI Lyrics Video Maker</title>
+    <meta charset="UTF-8">
 
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-body {
-    font-family: Arial, sans-serif;
-    background:
-        radial-gradient(circle at top, #241052, #090712 45%, #050509);
-    color: white;
-    min-height: 100vh;
-}
+    <title>
+        T-REX AI Lyrics Video Maker
+    </title>
 
-.container {
-    width: 92%;
-    max-width: 1100px;
-    margin: auto;
-    padding: 35px 0 60px;
-}
+    <style>
 
-.logo {
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-.logo span {
-    color: #a855f7;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top,
+                    #251044,
+                    #09060f 55%,
+                    #050308
+                );
+            color: #ffffff;
+            min-height: 100vh;
+        }
 
-.hero {
-    text-align: center;
-    padding: 70px 10px 45px;
-}
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px;
+        }
 
-.hero h1 {
-    font-size: clamp(38px, 8vw, 72px);
-    line-height: 1;
-    margin-bottom: 20px;
-}
+        header {
+            text-align: center;
+            padding: 25px 10px;
+        }
 
-.hero h1 span {
-    color: #c084fc;
-}
+        .logo {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #b77aff;
+            text-shadow:
+                0 0 10px #8d42ff,
+                0 0 25px #6d20d9;
+        }
 
-.hero p {
-    color: #b7b4c5;
-    font-size: 17px;
-    max-width: 650px;
-    margin: auto;
-    line-height: 1.6;
-}
+        .subtitle {
+            margin-top: 8px;
+            color: #b9abc9;
+            font-size: 15px;
+        }
 
-.steps {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 35px;
-}
+        .card {
+            background: rgba(24, 15, 38, 0.88);
+            border: 1px solid #392250;
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.35);
+        }
 
-.step {
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 18px;
-    padding: 18px;
-}
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
 
-.step-number {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: #8b5cf6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-bottom: 12px;
-}
+        .upload {
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed #7046b8;
+            border-radius: 18px;
+            padding: 30px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: .2s;
+            display: block;
+        }
 
-.step h3 {
-    font-size: 15px;
-}
+        .upload:hover {
+            border-color: #b77aff;
+            background: rgba(112, 70, 184, 0.08);
+        }
 
-.step p {
-    color: #9995aa;
-    font-size: 12px;
-    margin-top: 5px;
-}
+        /* PHONE CHROME UPLOAD FIX */
 
-.editor {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-}
+        input[type="file"] {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
 
-.card {
-    background: rgba(17, 15, 27, .88);
-    border: 1px solid rgba(255,255,255,.1);
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 15px 50px rgba(0,0,0,.25);
-}
+        .upload-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
 
-.card h2 {
-    margin-bottom: 18px;
-}
+        .upload-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
 
-.upload {
-    border: 2px dashed #7046b8;
-    border-radius: 18px;
-    padding: 30px 15px;
-    text-align: center;
-    cursor: pointer;
-    transition: .2s;
-    display: block;
-}
+        .upload-text {
+            margin-top: 7px;
+            color: #a99bb7;
+            font-size: 13px;
+        }
 
-.upload:hover {
-    background: rgba(139,92,246,.08);
-}
+        .file-name {
+            margin-top: 15px;
+            color: #c68cff;
+            font-size: 14px;
+            word-break: break-word;
+        }
 
-.upload-icon {
-    font-size: 42px;
-    margin-bottom: 12px;
-}
+        audio {
+            width: 100%;
+            margin-top: 18px;
+        }
 
-.upload p {
-    color: #aaa5b8;
-    font-size: 14px;
-    margin-top: 6px;
-}
+        input,
+        textarea,
+        select {
+            width: 100%;
+            background: #100a18;
+            color: #ffffff;
+            border: 1px solid #49305f;
+            border-radius: 12px;
+            padding: 13px;
+            outline: none;
+            font-size: 15px;
+        }
 
-input[type="file"] {
-    display: none;
-}
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #a866ff;
+        }
 
-.song-info {
-    display: none;
-    margin-top: 15px;
-    padding: 15px;
-    background: rgba(139,92,246,.09);
-    border: 1px solid rgba(168,85,247,.3);
-    border-radius: 15px;
-}
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
 
-.song-name {
-    font-size: 14px;
-    font-weight: bold;
-    word-break: break-word;
-}
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
 
-.song-size {
-    color: #aaa5b8;
-    font-size: 12px;
-    margin-top: 5px;
-}
+        .field {
+            margin-bottom: 18px;
+        }
 
-audio {
-    width: 100%;
-    margin-top: 12px;
-    height: 40px;
-}
+        .styles {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
 
-.remove-song {
-    margin-top: 10px;
-    padding: 8px 12px;
-    border: 1px solid #5b3340;
-    background: rgba(220,38,38,.12);
-    color: #ff8b8b;
-    border-radius: 9px;
-    cursor: pointer;
-}
+        .style-option {
+            background: #120b1b;
+            border: 1px solid #402956;
+            border-radius: 12px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: .2s;
+        }
 
-textarea {
-    width: 100%;
-    height: 170px;
-    resize: vertical;
-    background: #0b0911;
-    border: 1px solid #30293c;
-    border-radius: 15px;
-    color: white;
-    padding: 15px;
-    outline: none;
-    font-size: 14px;
-}
+        .style-option:hover {
+            border-color: #a866ff;
+        }
 
-textarea:focus {
-    border-color: #8b5cf6;
-}
+        .style-option.active {
+            border-color: #b77aff;
+            background: #24133b;
+            box-shadow:
+                0 0 15px rgba(157, 82, 255, .2);
+        }
 
-.styles {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 15px;
-}
+        .style-icon {
+            font-size: 25px;
+            margin-bottom: 6px;
+        }
 
-.style {
-    padding: 12px 5px;
-    border: 1px solid #332b40;
-    border-radius: 12px;
-    text-align: center;
-    font-size: 13px;
-    cursor: pointer;
-    transition: .2s;
-}
+        .style-name {
+            font-size: 13px;
+        }
 
-.style:hover {
-    border-color: #8b5cf6;
-}
+        .generate {
+            width: 100%;
+            border: none;
+            border-radius: 15px;
+            padding: 17px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #8e43e7,
+                    #c05cff
+                );
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow:
+                0 8px 25px rgba(145, 58, 240, .3);
+            transition: .2s;
+        }
 
-.style.active {
-    border-color: #a855f7;
-    background: rgba(168,85,247,.15);
-    box-shadow: 0 0 15px rgba(168,85,247,.12);
-}
+        .generate:hover {
+            transform: translateY(-1px);
+        }
 
-.generate {
-    width: 100%;
-    margin-top: 22px;
-    padding: 16px;
-    border: 0;
-    border-radius: 14px;
-    background: linear-gradient(90deg, #7c3aed, #c026d3);
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-}
+        .generate:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
 
-.generate:hover {
-    opacity: .9;
-}
+        .preview {
+            min-height: 300px;
+            border-radius: 18px;
+            background:
+                linear-gradient(
+                    145deg,
+                    #170b25,
+                    #08050c
+                );
+            border: 1px solid #3d2850;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 25px;
+        }
 
-.generate:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
+        .preview-text {
+            color: #887b96;
+            font-size: 15px;
+        }
 
-.preview {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        .lyrics-preview {
+            margin-top: 15px;
+            color: #ffffff;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
 
-.phone {
-    width: 240px;
-    height: 425px;
-    border-radius: 25px;
-    overflow: hidden;
-    border: 5px solid #24202c;
-    background:
-        radial-gradient(circle at 50% 30%, #7137b8, #090712 55%);
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .ai-status {
+            display: none;
+            margin-top: 15px;
+            padding: 13px;
+            border-radius: 12px;
+            background: #160d21;
+            border: 1px solid #49305f;
+            color: #d5b7f5;
+            font-size: 14px;
+        }
 
-.lyrics-preview {
-    text-align: center;
-    padding: 20px;
-    font-size: 21px;
-    font-weight: bold;
-    text-shadow: 0 0 18px #c084fc;
-    max-width: 100%;
-    word-break: break-word;
-}
+        .feature-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
 
-.badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    font-size: 10px;
-    background: rgba(0,0,0,.45);
-    padding: 6px 9px;
-    border-radius: 20px;
-}
+        .feature {
+            padding: 16px;
+            border-radius: 14px;
+            background: #110a18;
+            border: 1px solid #352342;
+        }
 
-.preview-style {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 10px;
-    color: #c4b5fd;
-    background: rgba(0,0,0,.4);
-    padding: 5px 9px;
-    border-radius: 20px;
-}
+        .feature strong {
+            display: block;
+            margin-bottom: 6px;
+        }
 
-.features {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-top: 25px;
-}
+        .feature span {
+            color: #9e91aa;
+            font-size: 13px;
+            line-height: 1.5;
+        }
 
-.feature {
-    padding: 20px;
-    border-radius: 18px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.08);
-}
+        footer {
+            text-align: center;
+            padding: 25px 10px;
+            color: #74687f;
+            font-size: 12px;
+        }
 
-.feature-icon {
-    font-size: 27px;
-    margin-bottom: 10px;
-}
+        @media (max-width: 600px) {
 
-.feature h3 {
-    font-size: 14px;
-}
+            .container {
+                padding: 12px;
+            }
 
-.feature p {
-    color: #9995aa;
-    font-size: 12px;
-    margin-top: 7px;
-    line-height: 1.5;
-}
+            .logo {
+                font-size: 30px;
+            }
 
-.status {
-    margin-top: 12px;
-    color: #a7f3d0;
-    font-size: 13px;
-    display: none;
-}
+            .card {
+                padding: 16px;
+                border-radius: 16px;
+            }
 
-.ai-status {
-    margin-top: 12px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    background: rgba(139,92,246,.08);
-    border: 1px solid rgba(139,92,246,.2);
-    color: #c4b5fd;
-    font-size: 13px;
-    display: none;
-}
+            .upload {
+                padding: 25px 10px;
+            }
 
-@media(max-width: 750px) {
-    .steps {
-        grid-template-columns: repeat(2, 1fr);
-    }
+            .generate {
+                font-size: 16px;
+            }
 
-    .editor {
-        grid-template-columns: 1fr;
-    }
+        }
 
-    .features {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+    </style>
 
-@media(max-width: 450px) {
-    .container {
-        width: 94%;
-    }
-
-    .hero {
-        padding-top: 45px;
-    }
-
-    .steps {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .features {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .card {
-        padding: 18px;
-    }
-}
-</style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <div class="logo">
-        🦖 T-REX <span>LYRICS</span>
-    </div>
+        <header>
 
-    <section class="hero">
+            <div class="logo">
+                T-REX
+            </div>
 
-        <h1>
-            AI Lyrics <span>Video Maker</span>
-        </h1>
+            <div class="subtitle">
+                AI Lyrics Video Maker
+            </div>
 
-        <p>
-            Turn your songs and lyrics into stylish cinematic lyric videos
-            with animated text, glowing effects and beautiful backgrounds.
-        </p>
+        </header>
 
-    </section>
+        <section class="card">
 
-    <div class="steps">
+            <div class="section-title">
+                🎵 Upload Your Song
+            </div>
 
-        <div class="step">
-            <div class="step-number">1</div>
-            <h3>🎵 Upload</h3>
-            <p>Add your song</p>
-        </div>
-
-        <div class="step">
-            <div class="step-number">2</div>
-            <h3>📝 AI Lyrics</h3>
-            <p>Detect lyrics automatically</p>
-        </div>
-
-        <div class="step">
-            <div class="step-number">3</div>
-            <h3>✨ Style</h3>
-            <p>Choose your style</p>
-        </div>
-
-        <div class="step">
-            <div class="step-number">4</div>
-            <h3>🎬 Generate</h3>
-            <p>Create your video</p>
-        </div>
-
-    </div>
-
-    <div class="editor">
-
-        <div class="card">
-
-            <h2>🎵 Your Project</h2>
-
-            <label class="upload" id="uploadBox">
-
-                <input
-                    id="songInput"
-                    type="file"
-                    accept=".mp3,.wav,.m4a,.aac,.ogg,audio/*"
-                >
+            <label class="upload">
 
                 <div class="upload-icon">
                     🎧
                 </div>
 
-                <strong id="uploadTitle">
-                    Upload your song
-                </strong>
+                <div class="upload-title">
+                    Choose Audio File
+                </div>
 
-                <p id="uploadText">
-                    MP3, WAV or M4A
-                </p>
+                <div class="upload-text">
+                    MP3, WAV, M4A, OGG, WEBM
+                </div>
+
+                <div
+                    class="file-name"
+                    id="fileName"
+                >
+                    No file selected
+                </div>
+
+                <input
+                    type="file"
+                    id="songInput"
+                    accept=".mp3,.wav,.m4a,.ogg,.webm,audio/*"
+                >
 
             </label>
 
-            <div
-                class="song-info"
-                id="songInfo"
-            >
+            <audio
+                id="audioPlayer"
+                controls
+                style="display:none;"
+            ></audio>
 
-                <div
-                    class="song-name"
-                    id="songName"
-                ></div>
+        </section>
 
-                <div
-                    class="song-size"
-                    id="songSize"
-                ></div>
+        <section class="card">
 
-                <audio
-                    id="audioPlayer"
-                    controls
-                ></audio>
+            <div class="section-title">
+                📝 Song Information
+            </div>
 
-                <button
-                    class="remove-song"
-                    id="removeSong"
-                    type="button"
+            <div class="field">
+
+                <label for="songTitle">
+                    Song Name
+                </label>
+
+                <input
+                    type="text"
+                    id="songTitle"
+                    placeholder="Enter song name"
                 >
-                    ❌ Remove Song
-                </button>
 
             </div>
 
-            <div
-                class="status"
-                id="uploadStatus"
-            >
-                ✅ Song loaded successfully
+            <div class="field">
+
+                <label for="artistName">
+                    Artist
+                </label>
+
+                <input
+                    type="text"
+                    id="artistName"
+                    placeholder="Enter artist name"
+                >
+
             </div>
 
-            <h2 style="margin-top:25px;">
-                📝 Lyrics
-            </h2>
+        </section>
 
-            <textarea
-                id="lyricsInput"
-                placeholder="Lyrics will be detected automatically when you generate..."
-            ></textarea>
+        <section class="card">
+
+            <div class="section-title">
+                🎤 Lyrics
+            </div>
+
+            <div class="field">
+
+                <label for="lyricsInput">
+                    Lyrics
+                </label>
+
+                <textarea
+                    id="lyricsInput"
+                    placeholder="Paste lyrics here or let AI detect them automatically..."
+                ></textarea>
+
+            </div>
 
             <div
                 class="ai-status"
                 id="aiStatus"
-            ></div>
+            >
+            </div>
 
-            <h2 style="margin-top:22px;">
-                🎨 Choose Style
-            </h2>
+        </section>
+                <section class="card">
+
+            <div class="section-title">
+                🎨 Choose Video Style
+            </div>
 
             <div class="styles">
 
                 <div
-                    class="style active"
+                    class="style-option active"
                     data-style="Anime"
                 >
-                    🌌 Anime
+                    <div class="style-icon">
+                        🌌
+                    </div>
+
+                    <div class="style-name">
+                        Anime
+                    </div>
                 </div>
 
                 <div
-                    class="style"
+                    class="style-option"
                     data-style="Cinematic"
                 >
-                    🎬 Cinematic
+                    <div class="style-icon">
+                        🎬
+                    </div>
+
+                    <div class="style-name">
+                        Cinematic
+                    </div>
                 </div>
 
                 <div
-                    class="style"
+                    class="style-option"
                     data-style="Sad"
                 >
-                    💙 Sad
+                    <div class="style-icon">
+                        💙
+                    </div>
+
+                    <div class="style-name">
+                        Sad
+                    </div>
                 </div>
 
                 <div
-                    class="style"
+                    class="style-option"
                     data-style="Dark"
                 >
-                    🖤 Dark
+                    <div class="style-icon">
+                        🖤
+                    </div>
+
+                    <div class="style-name">
+                        Dark
+                    </div>
                 </div>
 
                 <div
-                    class="style"
+                    class="style-option"
                     data-style="Gaming"
                 >
-                    🎮 Gaming
+                    <div class="style-icon">
+                        🎮
+                    </div>
+
+                    <div class="style-name">
+                        Gaming
+                    </div>
                 </div>
 
                 <div
-                    class="style"
+                    class="style-option"
                     data-style="Lo-fi"
                 >
-                    🌙 Lo-fi
+                    <div class="style-icon">
+                        🌙
+                    </div>
+
+                    <div class="style-name">
+                        Lo-fi
+                    </div>
                 </div>
 
             </div>
+
+        </section>
+
+
+        <section class="card">
+
+            <div class="section-title">
+                👀 Lyrics Preview
+            </div>
+
+            <div class="preview">
+
+                <div
+                    class="preview-text"
+                    id="previewText"
+                >
+                    Your lyrics preview
+                    will appear here ✨
+
+                    <div
+                        class="lyrics-preview"
+                        id="lyricsPreview"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="card">
 
             <button
                 class="generate"
@@ -571,112 +587,82 @@ textarea:focus {
                 ✨ GENERATE LYRIC VIDEO
             </button>
 
-        </div>
+        </section>
 
-        <div class="card preview">
 
-            <div class="phone">
+        <section class="card">
 
-                <div class="badge">
-                    9:16 PREVIEW
-                </div>
+            <div class="section-title">
+                ⚡ AI Features
+            </div>
 
-                <div
-                    class="lyrics-preview"
-                    id="lyricsPreview"
-                >
-                    Your lyrics<br>
-                    will appear<br>
+            <div class="feature-grid">
 
-                    <span style="color:#c084fc;">
-                        here ✨
+                <div class="feature">
+
+                    <strong>
+                        🎤 AI Transcription
+                    </strong>
+
+                    <span>
+                        Automatically detect lyrics
+                        from your uploaded song.
                     </span>
+
                 </div>
 
-                <div
-                    class="preview-style"
-                    id="previewStyle"
-                >
-                    🌌 Anime
+                <div class="feature">
+
+                    <strong>
+                        ⏱️ Word Timing
+                    </strong>
+
+                    <span>
+                        Get word-level timing data
+                        for animated lyrics.
+                    </span>
+
+                </div>
+
+                <div class="feature">
+
+                    <strong>
+                        ✨ Effects
+                    </strong>
+
+                    <span>
+                        Add glow, flash and
+                        cinematic text effects.
+                    </span>
+
+                </div>
+
+                <div class="feature">
+
+                    <strong>
+                        📱 9:16 Video
+                    </strong>
+
+                    <span>
+                        Designed for Reels,
+                        Shorts and TikTok.
+                    </span>
+
                 </div>
 
             </div>
 
-        </div>
+        </section>
+
+
+        <footer>
+
+            🦖 T-REX AI Lyrics Video Maker
+
+        </footer>
 
     </div>
-
-    <div class="features">
-
-        <div class="feature">
-
-            <div class="feature-icon">
-                ⚡
-            </div>
-
-            <h3>
-                Word-by-Word
-            </h3>
-
-            <p>
-                AI detects word timing automatically.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <div class="feature-icon">
-                ✨
-            </div>
-
-            <h3>
-                Glow Effects
-            </h3>
-
-            <p>
-                Flashy cinematic effects.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <div class="feature-icon">
-                🖼️
-            </div>
-
-            <h3>
-                Backgrounds
-            </h3>
-
-            <p>
-                Beautiful video backgrounds.
-            </p>
-
-        </div>
-
-        <div class="feature">
-
-            <div class="feature-icon">
-                📱
-            </div>
-
-            <h3>
-                9:16 Export
-            </h3>
-
-            <p>
-                Perfect for Reels & Shorts.
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-<script>
+    <script>
 
 const BACKEND_URL =
     "https://lyrics-ai-backend.onrender.com";
@@ -689,32 +675,17 @@ const BACKEND_URL =
 const songInput =
     document.getElementById("songInput");
 
-const songInfo =
-    document.getElementById("songInfo");
-
-const songName =
-    document.getElementById("songName");
-
-const songSize =
-    document.getElementById("songSize");
+const fileName =
+    document.getElementById("fileName");
 
 const audioPlayer =
     document.getElementById("audioPlayer");
 
-const uploadTitle =
-    document.getElementById("uploadTitle");
+const songTitle =
+    document.getElementById("songTitle");
 
-const uploadText =
-    document.getElementById("uploadText");
-
-const uploadStatus =
-    document.getElementById("uploadStatus");
-
-const uploadBox =
-    document.getElementById("uploadBox");
-
-const removeSong =
-    document.getElementById("removeSong");
+const artistName =
+    document.getElementById("artistName");
 
 const lyricsInput =
     document.getElementById("lyricsInput");
@@ -729,13 +700,16 @@ const generateButton =
     document.getElementById("generateButton");
 
 const styles =
-    document.querySelectorAll(".style");
+    document.querySelectorAll(".style-option");
 
-const previewStyle =
-    document.getElementById("previewStyle");
 
+/* =========================
+   VARIABLES
+========================= */
 
 let currentAudioURL = null;
+
+let selectedStyle = "Anime";
 
 let transcriptData = {
     text: "",
@@ -745,7 +719,7 @@ let transcriptData = {
 
 
 /* =========================
-   FILE VALIDATION
+   AUDIO FILE VALIDATION
 ========================= */
 
 function isAudioFile(file) {
@@ -783,19 +757,20 @@ songInput.addEventListener(
     function () {
 
         const file =
-            this.files && this.files[0];
+            this.files &&
+            this.files[0];
 
         if (!file) {
             return;
         }
 
 
-        /* Android MIME-type safe check */
+        /* FILE TYPE */
 
         if (!isAudioFile(file)) {
 
             alert(
-                "Please select an MP3, WAV, M4A, AAC or OGG audio file."
+                "Please select a valid audio file."
             );
 
             this.value = "";
@@ -804,7 +779,7 @@ songInput.addEventListener(
         }
 
 
-        /* 25 MB test limit */
+        /* FILE SIZE */
 
         const maxSize =
             25 * 1024 * 1024;
@@ -822,7 +797,7 @@ songInput.addEventListener(
         }
 
 
-        /* Remove previous object URL */
+        /* OLD URL REMOVE */
 
         if (currentAudioURL) {
 
@@ -834,129 +809,27 @@ songInput.addEventListener(
         }
 
 
-        /* Create local preview */
+        /* CREATE AUDIO URL */
 
         currentAudioURL =
             URL.createObjectURL(file);
-
-
-        /* Show file information */
-
-        songName.textContent =
-            "🎵 " + file.name;
-
-        songSize.textContent =
-            (
-                file.size /
-                (1024 * 1024)
-            ).toFixed(2) +
-            " MB";
 
 
         audioPlayer.src =
             currentAudioURL;
 
 
-        songInfo.style.display =
+        audioPlayer.style.display =
             "block";
 
 
-        uploadTitle.textContent =
-            "✅ Song Selected";
+        /* FILE NAME */
+
+        fileName.textContent =
+            "🎵 " + file.name;
 
 
-        uploadText.textContent =
-            "Tap here to choose another song";
-
-
-        uploadBox.style.borderColor =
-            "#a855f7";
-
-
-        uploadStatus.style.display =
-            "block";
-
-
-        uploadStatus.textContent =
-            "✅ Song loaded successfully";
-
-
-        aiStatus.style.display =
-            "none";
-
-        aiStatus.textContent =
-            "";
-
-
-        transcriptData = {
-            text: "",
-            words: [],
-            segments: []
-        };
-
-    }
-);
-
-
-/* =========================
-   REMOVE SONG
-========================= */
-
-removeSong.addEventListener(
-    "click",
-    function () {
-
-        if (currentAudioURL) {
-
-            URL.revokeObjectURL(
-                currentAudioURL
-            );
-
-            currentAudioURL = null;
-        }
-
-
-        songInput.value = "";
-
-
-        audioPlayer.removeAttribute(
-            "src"
-        );
-
-        audioPlayer.load();
-
-
-        songInfo.style.display =
-            "none";
-
-
-        uploadTitle.textContent =
-            "Upload your song";
-
-
-        uploadText.textContent =
-            "MP3, WAV or M4A";
-
-
-        uploadBox.style.borderColor =
-            "#7046b8";
-
-
-        uploadStatus.style.display =
-            "none";
-
-
-        aiStatus.style.display =
-            "none";
-
-
-        aiStatus.textContent =
-            "";
-
-
-        lyricsInput.value =
-            "";
-
+        /* RESET TRANSCRIPTION */
 
         transcriptData = {
             text: "",
@@ -965,7 +838,11 @@ removeSong.addEventListener(
         };
 
 
-        updateLyricsPreview();
+        aiStatus.style.display =
+            "none";
+
+        aiStatus.textContent =
+            "";
 
     }
 );
@@ -994,11 +871,7 @@ function updateLyricsPreview() {
     if (!text) {
 
         lyricsPreview.innerHTML =
-            'Your lyrics<br>' +
-            'will appear<br>' +
-            '<span style="color:#c084fc;">' +
-            'here ✨' +
-            '</span>';
+            "";
 
         return;
     }
@@ -1006,24 +879,24 @@ function updateLyricsPreview() {
 
     const lines =
         text
-        .split("\n")
-        .filter(
-            line =>
-                line.trim() !== ""
-        );
+            .split("\n")
+            .filter(
+                line =>
+                    line.trim() !== ""
+            );
 
 
     const previewLines =
-        lines.slice(0, 4);
+        lines.slice(0, 6);
 
 
     lyricsPreview.innerHTML =
         previewLines
-        .map(
-            line =>
-                escapeHTML(line)
-        )
-        .join("<br>");
+            .map(
+                line =>
+                    escapeHTML(line)
+            )
+            .join("<br>");
 }
 
 
@@ -1066,8 +939,9 @@ styles.forEach(
                 );
 
 
-                previewStyle.textContent =
-                    this.textContent.trim();
+                selectedStyle =
+                    this.dataset.style ||
+                    "Anime";
 
             }
         );
@@ -1140,4 +1014,207 @@ async function transcribeSong(file) {
         }
 
 
-      
+        transcriptData = {
+
+            text:
+                result.text || "",
+
+            words:
+                Array.isArray(result.words)
+                    ? result.words
+                    : [],
+
+            segments:
+                Array.isArray(result.segments)
+                    ? result.segments
+                    : []
+
+        };
+
+
+        if (!transcriptData.text.trim()) {
+
+            throw new Error(
+                "No lyrics were detected in this audio."
+            );
+
+        }
+
+
+        lyricsInput.value =
+            transcriptData.text;
+
+
+        updateLyricsPreview();
+
+
+        const wordCount =
+            transcriptData.words.length;
+
+
+        const segmentCount =
+            transcriptData.segments.length;
+
+
+        aiStatus.textContent =
+            "✅ AI lyrics detected! " +
+            wordCount +
+            " words • " +
+            segmentCount +
+            " segments";
+
+
+        return transcriptData;
+
+    } catch (error) {
+
+        console.error(
+            "Transcription error:",
+            error
+        );
+
+
+        aiStatus.style.display =
+            "block";
+
+
+        aiStatus.textContent =
+            "❌ " +
+            error.message;
+
+
+        throw error;
+
+    }
+
+}
+        /* =========================
+   GENERATE BUTTON
+========================= */
+
+generateButton.addEventListener(
+    "click",
+    async function () {
+
+        const song =
+            songInput.files &&
+            songInput.files[0];
+
+
+        /* SONG CHECK */
+
+        if (!song) {
+
+            alert(
+                "🎵 First upload your song."
+            );
+
+            return;
+        }
+
+
+        generateButton.disabled =
+            true;
+
+
+        try {
+
+            /* =========================
+               AI TRANSCRIPTION
+            ========================= */
+
+            if (!lyricsInput.value.trim()) {
+
+                generateButton.textContent =
+                    "🎙️ AI DETECTING...";
+
+
+                await transcribeSong(
+                    song
+                );
+
+            } else {
+
+                aiStatus.style.display =
+                    "block";
+
+                aiStatus.textContent =
+                    "📝 Using your entered lyrics...";
+
+            }
+
+
+            /* =========================
+               PREPARING
+            ========================= */
+
+            generateButton.textContent =
+                "⏳ PREPARING PREVIEW...";
+
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        1000
+                    )
+            );
+
+
+            /* =========================
+               PREVIEW READY
+            ========================= */
+
+            generateButton.textContent =
+                "✅ LYRICS READY";
+
+
+            aiStatus.style.display =
+                "block";
+
+
+            aiStatus.textContent =
+                "🎬 Lyrics and timing data are ready.";
+
+
+            /* UPDATE PREVIEW */
+
+            updateLyricsPreview();
+
+
+            alert(
+                "✅ AI lyrics detected successfully!\n\n" +
+                "Style: " +
+                selectedStyle +
+                "\n\n" +
+                "Lyrics and timing data are ready.\n\n" +
+                "Next step: animated video rendering."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Generate error:",
+                error
+            );
+
+
+            generateButton.textContent =
+                "❌ TRY AGAIN";
+
+
+        } finally {
+
+            generateButton.disabled =
+                false;
+
+        }
+
+    }
+);
+        </script>
+
+</body>
+
+</html>
