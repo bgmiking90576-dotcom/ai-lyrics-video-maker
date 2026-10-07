@@ -394,12 +394,16 @@ textarea:focus {
     </div>
 
     <section class="hero">
-        <h1>AI Lyrics <span>Video Maker</span></h1>
+
+        <h1>
+            AI Lyrics <span>Video Maker</span>
+        </h1>
 
         <p>
             Turn your songs and lyrics into stylish cinematic lyric videos
             with animated text, glowing effects and beautiful backgrounds.
         </p>
+
     </section>
 
     <div class="steps">
@@ -441,10 +445,12 @@ textarea:focus {
                 <input
                     id="songInput"
                     type="file"
-                    accept="audio/*"
+                    accept=".mp3,.wav,.m4a,.aac,.ogg,audio/*"
                 >
 
-                <div class="upload-icon">🎧</div>
+                <div class="upload-icon">
+                    🎧
+                </div>
 
                 <strong id="uploadTitle">
                     Upload your song
@@ -456,13 +462,25 @@ textarea:focus {
 
             </label>
 
-            <div class="song-info" id="songInfo">
+            <div
+                class="song-info"
+                id="songInfo"
+            >
 
-                <div class="song-name" id="songName"></div>
+                <div
+                    class="song-name"
+                    id="songName"
+                ></div>
 
-                <div class="song-size" id="songSize"></div>
+                <div
+                    class="song-size"
+                    id="songSize"
+                ></div>
 
-                <audio id="audioPlayer" controls></audio>
+                <audio
+                    id="audioPlayer"
+                    controls
+                ></audio>
 
                 <button
                     class="remove-song"
@@ -474,7 +492,10 @@ textarea:focus {
 
             </div>
 
-            <div class="status" id="uploadStatus">
+            <div
+                class="status"
+                id="uploadStatus"
+            >
                 ✅ Song loaded successfully
             </div>
 
@@ -487,7 +508,10 @@ textarea:focus {
                 placeholder="Lyrics will be detected automatically when you generate..."
             ></textarea>
 
-            <div class="ai-status" id="aiStatus"></div>
+            <div
+                class="ai-status"
+                id="aiStatus"
+            ></div>
 
             <h2 style="margin-top:22px;">
                 🎨 Choose Style
@@ -495,27 +519,45 @@ textarea:focus {
 
             <div class="styles">
 
-                <div class="style active" data-style="Anime">
+                <div
+                    class="style active"
+                    data-style="Anime"
+                >
                     🌌 Anime
                 </div>
 
-                <div class="style" data-style="Cinematic">
+                <div
+                    class="style"
+                    data-style="Cinematic"
+                >
                     🎬 Cinematic
                 </div>
 
-                <div class="style" data-style="Sad">
+                <div
+                    class="style"
+                    data-style="Sad"
+                >
                     💙 Sad
                 </div>
 
-                <div class="style" data-style="Dark">
+                <div
+                    class="style"
+                    data-style="Dark"
+                >
                     🖤 Dark
                 </div>
 
-                <div class="style" data-style="Gaming">
+                <div
+                    class="style"
+                    data-style="Gaming"
+                >
                     🎮 Gaming
                 </div>
 
-                <div class="style" data-style="Lo-fi">
+                <div
+                    class="style"
+                    data-style="Lo-fi"
+                >
                     🌙 Lo-fi
                 </div>
 
@@ -567,43 +609,67 @@ textarea:focus {
     <div class="features">
 
         <div class="feature">
-            <div class="feature-icon">⚡</div>
 
-            <h3>Word-by-Word</h3>
+            <div class="feature-icon">
+                ⚡
+            </div>
+
+            <h3>
+                Word-by-Word
+            </h3>
 
             <p>
                 AI detects word timing automatically.
             </p>
+
         </div>
 
         <div class="feature">
-            <div class="feature-icon">✨</div>
 
-            <h3>Glow Effects</h3>
+            <div class="feature-icon">
+                ✨
+            </div>
+
+            <h3>
+                Glow Effects
+            </h3>
 
             <p>
                 Flashy cinematic effects.
             </p>
+
         </div>
 
         <div class="feature">
-            <div class="feature-icon">🖼️</div>
 
-            <h3>Backgrounds</h3>
+            <div class="feature-icon">
+                🖼️
+            </div>
+
+            <h3>
+                Backgrounds
+            </h3>
 
             <p>
                 Beautiful video backgrounds.
             </p>
+
         </div>
 
         <div class="feature">
-            <div class="feature-icon">📱</div>
 
-            <h3>9:16 Export</h3>
+            <div class="feature-icon">
+                📱
+            </div>
+
+            <h3>
+                9:16 Export
+            </h3>
 
             <p>
                 Perfect for Reels & Shorts.
             </p>
+
         </div>
 
     </div>
@@ -614,6 +680,11 @@ textarea:focus {
 
 const BACKEND_URL =
     "https://lyrics-ai-backend.onrender.com";
+
+
+/* =========================
+   ELEMENTS
+========================= */
 
 const songInput =
     document.getElementById("songInput");
@@ -663,6 +734,7 @@ const styles =
 const previewStyle =
     document.getElementById("previewStyle");
 
+
 let currentAudioURL = null;
 
 let transcriptData = {
@@ -673,93 +745,157 @@ let transcriptData = {
 
 
 /* =========================
-   SONG UPLOAD
+   FILE VALIDATION
 ========================= */
 
-songInput.addEventListener("change", function () {
+function isAudioFile(file) {
 
-    const file = this.files[0];
-
-    if (!file) return;
-
-    if (!file.type.startsWith("audio/")) {
-
-        alert("Please select an audio file.");
-
-        this.value = "";
-
-        return;
+    if (!file) {
+        return false;
     }
 
-    /*
-       Groq direct upload limit on the free tier
-       is 25 MB.
-    */
+    const fileName =
+        file.name.toLowerCase();
 
-    const maxSize =
-        25 * 1024 * 1024;
+    const validExtension =
+        fileName.endsWith(".mp3") ||
+        fileName.endsWith(".wav") ||
+        fileName.endsWith(".m4a") ||
+        fileName.endsWith(".aac") ||
+        fileName.endsWith(".ogg") ||
+        fileName.endsWith(".oga") ||
+        fileName.endsWith(".webm");
 
-    if (file.size > maxSize) {
+    const validMime =
+        file.type &&
+        file.type.startsWith("audio/");
 
-        alert(
-            "⚠️ Audio file is larger than 25 MB.\n\n" +
-            "Please use a smaller audio file for now."
-        );
+    return validMime || validExtension;
+}
 
-        this.value = "";
 
-        return;
+/* =========================
+   SONG SELECT
+========================= */
+
+songInput.addEventListener(
+    "change",
+    function () {
+
+        const file =
+            this.files && this.files[0];
+
+        if (!file) {
+            return;
+        }
+
+
+        /* Android MIME-type safe check */
+
+        if (!isAudioFile(file)) {
+
+            alert(
+                "Please select an MP3, WAV, M4A, AAC or OGG audio file."
+            );
+
+            this.value = "";
+
+            return;
+        }
+
+
+        /* 25 MB test limit */
+
+        const maxSize =
+            25 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+
+            alert(
+                "⚠️ Audio file is larger than 25 MB.\n\n" +
+                "Please select an audio file below 25 MB for now."
+            );
+
+            this.value = "";
+
+            return;
+        }
+
+
+        /* Remove previous object URL */
+
+        if (currentAudioURL) {
+
+            URL.revokeObjectURL(
+                currentAudioURL
+            );
+
+            currentAudioURL = null;
+        }
+
+
+        /* Create local preview */
+
+        currentAudioURL =
+            URL.createObjectURL(file);
+
+
+        /* Show file information */
+
+        songName.textContent =
+            "🎵 " + file.name;
+
+        songSize.textContent =
+            (
+                file.size /
+                (1024 * 1024)
+            ).toFixed(2) +
+            " MB";
+
+
+        audioPlayer.src =
+            currentAudioURL;
+
+
+        songInfo.style.display =
+            "block";
+
+
+        uploadTitle.textContent =
+            "✅ Song Selected";
+
+
+        uploadText.textContent =
+            "Tap here to choose another song";
+
+
+        uploadBox.style.borderColor =
+            "#a855f7";
+
+
+        uploadStatus.style.display =
+            "block";
+
+
+        uploadStatus.textContent =
+            "✅ Song loaded successfully";
+
+
+        aiStatus.style.display =
+            "none";
+
+        aiStatus.textContent =
+            "";
+
+
+        transcriptData = {
+            text: "",
+            words: [],
+            segments: []
+        };
+
     }
-
-    if (currentAudioURL) {
-
-        URL.revokeObjectURL(
-            currentAudioURL
-        );
-    }
-
-    currentAudioURL =
-        URL.createObjectURL(file);
-
-    songName.textContent =
-        "🎵 " + file.name;
-
-    songSize.textContent =
-        (file.size / (1024 * 1024))
-        .toFixed(2) +
-        " MB";
-
-    audioPlayer.src =
-        currentAudioURL;
-
-    songInfo.style.display =
-        "block";
-
-    uploadTitle.textContent =
-        "✅ Song Selected";
-
-    uploadText.textContent =
-        "Tap here to choose another song";
-
-    uploadBox.style.borderColor =
-        "#a855f7";
-
-    uploadStatus.style.display =
-        "block";
-
-    aiStatus.style.display =
-        "none";
-
-    aiStatus.textContent =
-        "";
-
-    transcriptData = {
-        text: "",
-        words: [],
-        segments: []
-    };
-
-});
+);
 
 
 /* =========================
@@ -779,7 +915,9 @@ removeSong.addEventListener(
             currentAudioURL = null;
         }
 
+
         songInput.value = "";
+
 
         audioPlayer.removeAttribute(
             "src"
@@ -787,25 +925,38 @@ removeSong.addEventListener(
 
         audioPlayer.load();
 
+
         songInfo.style.display =
             "none";
+
 
         uploadTitle.textContent =
             "Upload your song";
 
+
         uploadText.textContent =
             "MP3, WAV or M4A";
+
 
         uploadBox.style.borderColor =
             "#7046b8";
 
+
         uploadStatus.style.display =
             "none";
+
 
         aiStatus.style.display =
             "none";
 
-        lyricsInput.value = "";
+
+        aiStatus.textContent =
+            "";
+
+
+        lyricsInput.value =
+            "";
+
 
         transcriptData = {
             text: "",
@@ -813,7 +964,9 @@ removeSong.addEventListener(
             segments: []
         };
 
+
         updateLyricsPreview();
+
     }
 );
 
@@ -837,6 +990,7 @@ function updateLyricsPreview() {
     const text =
         lyricsInput.value.trim();
 
+
     if (!text) {
 
         lyricsPreview.innerHTML =
@@ -849,20 +1003,25 @@ function updateLyricsPreview() {
         return;
     }
 
+
     const lines =
         text
         .split("\n")
         .filter(
-            line => line.trim() !== ""
+            line =>
+                line.trim() !== ""
         );
+
 
     const previewLines =
         lines.slice(0, 4);
 
+
     lyricsPreview.innerHTML =
         previewLines
         .map(
-            line => escapeHTML(line)
+            line =>
+                escapeHTML(line)
         )
         .join("<br>");
 }
@@ -884,31 +1043,37 @@ function escapeHTML(text) {
    STYLE SELECT
 ========================= */
 
-styles.forEach(style => {
+styles.forEach(
+    style => {
 
-    style.addEventListener(
-        "click",
-        function () {
+        style.addEventListener(
+            "click",
+            function () {
 
-            styles.forEach(item => {
+                styles.forEach(
+                    item => {
 
-                item.classList.remove(
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                this.classList.add(
                     "active"
                 );
 
-            });
 
-            this.classList.add(
-                "active"
-            );
+                previewStyle.textContent =
+                    this.textContent.trim();
 
-            previewStyle.textContent =
-                this.textContent.trim();
+            }
+        );
 
-        }
-    );
-
-});
+    }
+);
 
 
 /* =========================
@@ -923,13 +1088,17 @@ async function transcribeSong(file) {
     aiStatus.textContent =
         "🎙️ AI is listening to your song...";
 
+
     const formData =
         new FormData();
 
+
     formData.append(
         "file",
-        file
+        file,
+        file.name
     );
+
 
     try {
 
@@ -943,19 +1112,23 @@ async function transcribeSong(file) {
                 }
             );
 
+
         let result;
+
 
         try {
 
             result =
                 await response.json();
 
-        } catch (jsonError) {
+        } catch (error) {
 
             throw new Error(
                 "Backend returned an invalid response."
             );
+
         }
+
 
         if (!response.ok) {
 
@@ -963,133 +1136,8 @@ async function transcribeSong(file) {
                 result.error ||
                 "Transcription failed."
             );
+
         }
 
-        transcriptData = {
 
-            text:
-                result.text || "",
-
-            words:
-                Array.isArray(result.words)
-                    ? result.words
-                    : [],
-
-            segments:
-                Array.isArray(result.segments)
-                    ? result.segments
-                    : []
-
-        };
-
-        lyricsInput.value =
-            transcriptData.text;
-
-        updateLyricsPreview();
-
-        const wordCount =
-            transcriptData.words.length;
-
-        const segmentCount =
-            transcriptData.segments.length;
-
-        aiStatus.textContent =
-            "✅ AI lyrics detected successfully! " +
-            wordCount +
-            " words • " +
-            segmentCount +
-            " segments";
-
-        return transcriptData;
-
-    } catch (error) {
-
-        console.error(
-            "Transcription error:",
-            error
-        );
-
-        aiStatus.style.display =
-            "block";
-
-        aiStatus.textContent =
-            "❌ " + error.message;
-
-        throw error;
-    }
-}
-
-
-/* =========================
-   GENERATE
-========================= */
-
-generateButton.addEventListener(
-    "click",
-    async function () {
-
-        const song =
-            songInput.files[0];
-
-        if (!song) {
-
-            alert(
-                "🎵 First upload your song."
-            );
-
-            return;
-        }
-
-        generateButton.disabled =
-            true;
-
-        generateButton.textContent =
-            "🎙️ AI DETECTING LYRICS...";
-
-        try {
-
-            /*
-               If lyrics are empty,
-               automatically transcribe
-               the uploaded song.
-            */
-
-            if (
-                !lyricsInput.value.trim()
-            ) {
-
-                await transcribeSong(
-                    song
-                );
-
-            } else {
-
-                aiStatus.style.display =
-                    "block";
-
-                aiStatus.textContent =
-                    "📝 Using the lyrics you entered...";
-            }
-
-
-            /*
-               Small preview preparation
-            */
-
-            generateButton.textContent =
-                "⏳ Preparing Preview...";
-
-            await new Promise(
-                resolve =>
-                    setTimeout(
-                        resolve,
-                        1000
-                    )
-            );
-
-
-            generateButton.textContent =
-                "✅ LYRICS READY";
-
-            aiStatus.textContent =
-                "🎬 Lyri
+      
