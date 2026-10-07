@@ -2085,6 +2085,12 @@ function getLyricsLines() {
 
 function startLinePreview() {
 
+    if (
+        transcriptData.words &&
+        transcriptData.words.length
+    ) {
+        return;
+    }
     stopLyricsPreview();
 
     const lines =
