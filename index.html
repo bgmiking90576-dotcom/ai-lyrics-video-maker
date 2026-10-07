@@ -2337,19 +2337,61 @@ applyBackgroundMode();
    REAL AUDIO SYNC
 ========================= */
 
-let lyricSyncTimer = null;
+let lyricSyncFrame = null;
 let currentWordIndex = -1;
 
-function startLyricSync() {
-    stopLyricSync();
-    lyricSyncTimer = requestAnimationFrame(syncLyricsToAudio);
+function stopRealLyricSync() {
+    if (lyricSyncFrame !== null) {
+        cancelAnimationFrame(lyricSyncFrame);
+        lyricSyncFrame = null;
+    }
 }
 
-function stopLyricSync() {
-    if (lyricSyncTimer) {
-        cancelAnimationFrame(lyricSyncTimer);
-        lyricSyncTimer = null;
+function getCurrentWordIndex(time) {
+
+    const words = transcriptData.words || [];
+
+    if (!words.length) {
+        return -1;
     }
+
+    let low = 0;
+    let high = words.length - 1;
+    let result = -1;
+
+    while (low <= high) {
+
+        const mid = Math.floor((low + high) / 2);
+        const start = Number(words[mid].start);
+
+        if (start <= time) {
+            result = mid;
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    return result;
+}
+
+function showSyncedWord(index) {
+
+    const words = transcriptData.words || [];
+
+    if (index < 0 || !words[index]) {
+        animatedLyric.textContent = "";
+        return;
+    }
+
+    animatedLyric.textContent =
+        words[index].word || "";
+
+    animatedLyric.classList.remove("show");
+
+    void animatedLyric.offsetWidth;
+
+    animatedLyric.classList.add("show");
 }
 
 function syncLyricsToAudio() {
@@ -2360,96 +2402,61 @@ function syncLyricsToAudio() {
         !transcriptData.words ||
         !transcriptData.words.length
     ) {
-        stopLyricSync();
+        stopRealLyricSync();
         return;
     }
 
     const currentTime = audioPlayer.currentTime;
-    let index = -1;
 
-    for (let i = 0; i < transcriptData.words.length; i++) {
-
-        const word = transcriptData.words[i];
-
-        const start = Number(word.start);
-        const end = Number(word.end);
-
-        if (
-            currentTime >= start &&
-            currentTime <= end
-        ) {
-            index = i;
-            break;
-        }
-    }
+    const index =
+        getCurrentWordIndex(currentTime);
 
     if (index !== currentWordIndex) {
 
         currentWordIndex = index;
 
-        if (index >= 0) {
-            showCurrentLyricWord(index);
-        }
+        showSyncedWord(index);
     }
 
-    lyricSyncTimer =
+    lyricSyncFrame =
         requestAnimationFrame(syncLyricsToAudio);
 }
 
-function showCurrentLyricWord(index) {
+function startRealLyricSync() {
 
-    const words = transcriptData.words;
+    stopRealLyricSync();
 
-    if (!words || !words[index]) {
-        return;
-    }
+    currentWordIndex = -1;
 
-    const startIndex = Math.max(0, index - 5);
-    const endIndex = Math.min(words.length, index + 6);
-
-    const visibleWords =
-        words.slice(startIndex, endIndex);
-
-    lyricsPreview.innerHTML =
-        visibleWords.map((word, i) => {
-
-            const realIndex = startIndex + i;
-
-            const text =
-                escapeHTML(word.word || "");
-
-            if (realIndex === index) {
-                return `
-                    <span class="sync-current-word">
-                        ${text}
-                    </span>
-                `;
-            }
-
-            return `
-                <span>${text}</span>
-            `;
-
-        }).join(" ");
+    lyricSyncFrame =
+        requestAnimationFrame(syncLyricsToAudio);
 }
 
 audioPlayer.addEventListener("play", function () {
 
-    currentWordIndex = -1;
-    startLyricSync();
+    if (
+        transcriptData.words &&
+        transcriptData.words.length
+    ) {
+        startRealLyricSync();
+    }
 
 });
 
 audioPlayer.addEventListener("pause", function () {
 
-    stopLyricSync();
+    stopRealLyricSync();
 
 });
 
 audioPlayer.addEventListener("ended", function () {
 
-    stopLyricSync();
+    stopRealLyricSync();
+
     currentWordIndex = -1;
+
+    animatedLyric.textContent =
+        "✨ Song finished";
 
 });
 
@@ -2457,8 +2464,12 @@ audioPlayer.addEventListener("seeked", function () {
 
     currentWordIndex = -1;
 
-    if (!audioPlayer.paused) {
-        startLyricSync();
+    if (
+        !audioPlayer.paused &&
+        transcriptData.words &&
+        transcriptData.words.length
+    ) {
+        startRealLyricSync();
     }
 
 });
