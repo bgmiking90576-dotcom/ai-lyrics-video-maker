@@ -2822,45 +2822,13 @@ generateButton.addEventListener(
    AUDIO SYNC
 ========================= */
 
-audioPlayer.addEventListener(
-    "play",
-    function () {
-
-        if (!lyricsInput.value.trim()) {
-            return;
-        }
-
-        startLyricsPreview();
-
-    }
-);
-
-
-audioPlayer.addEventListener(
-    "pause",
-    function () {
-
-        stopLyricsPreview();
-
-    }
-);
 
 
 /* =========================
    AUDIO RESET
 ========================= */
 
-audioPlayer.addEventListener(
-    "ended",
-    function () {
 
-        stopLyricsPreview();
-
-        animatedLyric.textContent =
-            "✨ Song finished";
-
-    }
-);
 
 
 /* =========================
